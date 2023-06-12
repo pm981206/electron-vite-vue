@@ -1,26 +1,29 @@
-import { defineConfig } from 'vite'
-import electron from 'vite-plugin-electron'
-import renderer from 'vite-plugin-electron-renderer'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import electron from "vite-plugin-electron";
+import renderer from "vite-plugin-electron-renderer";
+import vue from "@vitejs/plugin-vue";
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  // 配置别名
+  resolve: {
+    alias: {
+      "@": require("path").resolve(__dirname, "src"),
+    },
+  },
   plugins: [
     vue(),
     electron([
       {
-        // Main-Process entry file of the Electron App.
-        entry: 'electron/main.ts',
+        entry: "electron/main/index.ts",
       },
       {
-        entry: 'electron/preload.ts',
+        entry: "electron/preload/index.ts",
         onstart(options) {
-          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
-          // instead of restarting the entire Electron App.
-          options.reload()
+          // 当 Preload-Scripts 构建完成时通知 Renderer-Process 重新加载页面，而不是重新启动整个 Electron App
+          options.reload();
         },
       },
     ]),
     renderer(),
   ],
-})
+});
